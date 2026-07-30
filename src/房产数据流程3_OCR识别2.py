@@ -87,22 +87,23 @@ class Config:
             umi_url = self.config_data["umi_ocr"].get("download_url", "")
             print(f"\n⚠️ 警告：Umi-OCR引擎未找到！")
             print(f"   预期路径: {self.umi_ocr_path}")
-            print(f"   下载地址: {umi_url}")
-            print(f"   请下载引擎并解压到 engines/Umi-OCR/ 目录下\n")
+            print(f"   可运行: python setup_engines.py 自动下载安装")
+            print(f"   或手动下载: {umi_url}\n")
         
         if not paddle_available:
             paddle_url = self.config_data["paddle_ocr"].get("download_url", "")
             print(f"⚠️ 提示：PaddleOCR-json备用引擎未找到")
             print(f"   预期路径: {self.ocr_exe_path}")
-            print(f"   下载地址: {paddle_url}")
-            print(f"   请下载引擎并解压到 engines/PaddleOCR/ 目录下\n")
+            print(f"   可运行: python setup_engines.py 自动下载安装")
+            print(f"   或手动下载: {paddle_url}\n")
         
         if umi_available:
             print("✓ Umi-OCR 引擎就绪")
         if paddle_available:
             print("✓ PaddleOCR-json 引擎就绪（备用）")
         if not umi_available and not paddle_available:
-            print("❌ 没有可用的OCR引擎，请先安装至少一个引擎！")
+            print("❌ 没有可用的OCR引擎！")
+            print("   快速安装: python setup_engines.py")
             print("   详细说明请查看 config/config.json 中的 _comment 字段\n")
 
 # 创建全局配置实例
