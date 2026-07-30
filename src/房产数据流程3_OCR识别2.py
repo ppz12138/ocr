@@ -1612,13 +1612,24 @@ def process_property_image(image_path):
             else:
                 property_info['备注'] = skip_note[1:]
         else:
-            # CA辅助字段去留逻辑
+            # CA辅助字段去留逻辑 + 非大岭山楼盘过滤
             ca = property_info.get('_CA', '')
             area = property_info.get('_区域', '')
+            prop_type = property_info.get('类型', '')
+            
+            # 规则1: 贾梦云区域只保留大岭山区域的
             if ca == '贾梦云' and area != '大岭山':
-                # 贾梦云区域只保留大岭山区域的
                 property_info['_skip_write'] = True
                 skip_note = f" [贾梦云区域非大岭山，跳过写入]"
+                if '备注' in property_info and property_info['备注']:
+                    property_info['备注'] += skip_note
+                else:
+                    property_info['备注'] = skip_note[1:]
+            
+            # 规则2: 二手喜报中非大岭山的楼盘应被过滤
+            elif prop_type == '二手' and area == '非大岭山':
+                property_info['_skip_write'] = True
+                skip_note = f" [二手非大岭山楼盘，跳过写入]"
                 if '备注' in property_info and property_info['备注']:
                     property_info['备注'] += skip_note
                 else:
