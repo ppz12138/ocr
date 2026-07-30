@@ -1,0 +1,30 @@
+{
+  "_comment": "OCR引擎下载：Umi-OCR主引擎 https://github.com/hiroi-sora/Umi-OCR/releases ，PaddleOCR-json备用引擎 https://github.com/hiroi-sora/PaddleOCR-json/releases ，将下载的引擎解压到 engines/ 目录下即可",
+  "paddle_ocr": {
+    "api_dir": "engines/PaddleOCR/api/python",
+    "exe_path": "engines/PaddleOCR/PaddleOCR-json_v1.4.1/PaddleOCR-json.exe",
+    "models_path": "engines/PaddleOCR/PaddleOCR-json_v1.4.1/models",
+    "download_url": "https://github.com/hiroi-sora/PaddleOCR-json/releases"
+  },
+  "umi_ocr": {
+    "exe_path": "engines/Umi-OCR/Umi-OCR.exe",
+    "download_url": "https://github.com/hiroi-sora/Umi-OCR/releases"
+  },
+  "data": {
+    "output_dir": "data/output",
+    "community_dict": "data/dicts/known_communities.json",
+    "person_dict": "data/dicts/known_persons.json"
+  },
+  "wps": {
+    "enabled": true,
+    "webhook_url": "https://www.kdocs.cn/api/v3/ide/file/318744425132/script/V2-5YGIUEMSD8MkwzccDW8ZlL/sync_task",
+    "script_token": "70V4jWMTTuDZG4O7tKjy9s",
+    "sheet_name": "成交数据"
+  },
+  "known_store_names": [
+    "金喜", "金荣", "百万", "行家", "钟意", "益安", "兄弟", "诚加", "致远", "荣鑫", "明德","诚明",
+    "安佳", "共富", "锦顺", "易友家", "德汇", "鼎居", "优瑞通", "诺远", "居佳", "源盛",
+    "铂城", "心怡", "小易", "铭杨", "易成", "乐创", "宜加", "易辰", "中宜", "仁创", "华城居",
+    "中诚", "杰成", "华欣", "恒升", "宜辰", "鑫瑞", "蒲公英", "鑫居", "锦瑞居", "益兴", "麦琪", "喜乐家"
+  ]
+}
