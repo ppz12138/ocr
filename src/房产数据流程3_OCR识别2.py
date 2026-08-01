@@ -1989,6 +1989,37 @@ def write_data_to_wps_sheet(data_list, days=14, selected_indices=None, force_ind
     
     skip_count = 0
     force_write_records = []  # 存储强制写入的记录
+    
+    # 预处理：相邻记录除金额外其他字段相同时，跳过金额为0的记录
+    skip_zero_amount_indices = set()
+    for i in range(1, len(data_list)):
+        curr = data_list[i]
+        prev = data_list[i - 1]
+        # 检查是否除金额外其他字段相同（与查重键一致：日期、类型、小区、门店、人员）
+        if (str(curr.get('日期', '')) == str(prev.get('日期', '')) and 
+            str(curr.get('类型', '')) == str(prev.get('类型', '')) and 
+            str(curr.get('小区', '')) == str(prev.get('小区', '')) and
+            str(curr.get('门店', '')) == str(prev.get('门店', '')) and
+            str(curr.get('人员', '')) == str(prev.get('人员', ''))):
+            # 除金额外其他字段相同，比较金额
+            try:
+                curr_amount = float(curr.get('金额', 0)) if curr.get('金额') else 0
+            except (ValueError, TypeError):
+                curr_amount = 0
+            try:
+                prev_amount = float(prev.get('金额', 0)) if prev.get('金额') else 0
+            except (ValueError, TypeError):
+                prev_amount = 0
+            
+            # 跳过金额为0的那条（保留金额非0的）
+            if curr_amount == 0 and prev_amount > 0:
+                skip_zero_amount_indices.add(i)
+            elif prev_amount == 0 and curr_amount > 0:
+                skip_zero_amount_indices.add(i - 1)
+    
+    if skip_zero_amount_indices:
+        print(f"  🔄 检测到 {len(skip_zero_amount_indices)} 条相邻重复且金额为0的记录，将自动跳过")
+    
     for i, result in enumerate(data_list):
         current_index = i + 1
         
@@ -2000,6 +2031,12 @@ def write_data_to_wps_sheet(data_list, days=14, selected_indices=None, force_ind
         if result.get('_skip_write', False):
             skip_count += 1
             print(f"  ⚠️  记录 {current_index}：{result['类型']} - {result['人员']} - {result['小区']} - {result['金额']} (全部不在已知列表，跳过写入)")
+            continue
+        
+        # 检查是否是相邻重复且金额为0的记录（跳过金额为0的，保留金额非0的）
+        if i in skip_zero_amount_indices:
+            skip_count += 1
+            print(f"  ⏭️  记录 {current_index}：{result['类型']} - {result['人员']} - {result['小区']} - {result['金额']} (相邻记录除金额外相同且金额为0，跳过)")
             continue
         
         # 使用内部辅助函数构建记录和查重键
@@ -2571,7 +2608,7 @@ def main():
     # =========================
     
     # 默认配置
-    default_image_folder = r"C:\Users\007\Documents\WXWork\1688855780630843\Cache\Image\2026-07"
+    default_image_folder = r"C:\Users\007\Documents\WXWork\1688855780630843\Cache\Image\2026-08"
     default_days = 2
     
     # 用户输入
